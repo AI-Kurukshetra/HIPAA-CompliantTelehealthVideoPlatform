@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HIPAA-Compliant Telehealth Platform (Project Setup)
 
-## Getting Started
+This repository is now set up with:
+- Next.js (App Router + TypeScript + Tailwind)
+- Supabase SDK integration (browser, server, middleware)
+- Starter SQL schema and RLS policies for telehealth MVP
 
-First, run the development server:
+## 1. Prerequisites
+
+- Node.js 20+ (you already have Node 24)
+- A Supabase account: https://supabase.com
+
+## 2. Create a Supabase project (first-time friendly)
+
+1. Log in to Supabase.
+2. Click **New project**.
+3. Choose organization, project name (for example: `telehealth-platform`), strong database password, and region.
+4. Wait until project status becomes active.
+5. Open **Project Settings -> API**.
+6. Copy:
+   - Project URL
+   - `anon` public key
+   - `service_role` key
+
+## 3. Configure environment variables
+
+1. Copy `.env.example` to `.env.local`.
+2. Fill the values from Supabase API settings:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 4. Apply database setup SQL
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+In your Supabase dashboard:
+1. Go to **SQL Editor**.
+2. Run [`supabase/sql/001_schema.sql`](./supabase/sql/001_schema.sql).
+3. Run [`supabase/sql/002_rls.sql`](./supabase/sql/002_rls.sql).
+4. Run [`supabase/sql/003_payments_mvp.sql`](./supabase/sql/003_payments_mvp.sql) for payment write policies used by the app.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This creates the initial entities and Row Level Security policies for:
+- users/profiles, providers, patients
+- appointments, video sessions
+- messages, files, payments
+- audit logs
 
-## Learn More
+## 5. Run the app
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm install
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Open `http://localhost:3000`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The homepage shows:
+- whether Supabase env vars are configured
+- whether auth session lookup is working
 
-## Deploy on Vercel
+## 6. Configure Supabase Auth redirect URLs
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+In Supabase dashboard:
+1. Go to **Authentication -> URL Configuration**.
+2. Set **Site URL** to:
+   - `http://localhost:3000`
+3. Add **Redirect URL**:
+   - `http://localhost:3000/auth/callback`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Without this step, magic-link sign-in callback will fail.
+
+## 7. Implemented app slice (auth + onboarding + appointments)
+
+- `src/lib/supabase/client.ts`: browser Supabase client
+- `src/lib/supabase/server.ts`: server Supabase client for App Router
+- `src/lib/supabase/middleware.ts` + `middleware.ts`: session refresh middleware
+- `src/app/auth/callback/route.ts`: auth callback handler
+- `src/app/auth/auth-code-error/page.tsx`: callback failure page
+- `src/app/auth/sign-in/page.tsx`: magic-link sign-in UI
+- `src/app/onboarding/page.tsx`: role onboarding (provider/patient)
+- `src/app/app/*`: protected dashboard + appointment flows
+- Starter schema and RLS SQL in `supabase/sql`
+
+Routes now available:
+- `/` landing/status
+- `/auth/sign-in`
+- `/onboarding`
+- `/app`
+- `/app/appointments`
+- `/app/appointments/new`
+
+## 8. Important note for HIPAA readiness
+
+This setup is a solid base, but not full HIPAA compliance by itself. Before production, we still need:
+- full security controls and audits
+- infra hardening and key management
+- BAA-ready vendor configuration
+- complete audit, retention, and incident response workflows
