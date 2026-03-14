@@ -42,6 +42,7 @@ In your Supabase dashboard:
 4. Run [`supabase/sql/003_payments_mvp.sql`](./supabase/sql/003_payments_mvp.sql) for payment write policies used by the app.
 5. Optional: run [`supabase/sql/004_demo_seed_data.sql`](./supabase/sql/004_demo_seed_data.sql) for demo UI walkthrough data.
 6. Optional (demo reset): run [`supabase/sql/005_reset_and_seed_demo_data.sql`](./supabase/sql/005_reset_and_seed_demo_data.sql) to wipe transactional app data and generate a fresh, richer demo dataset.
+7. If provider onboarding fails to create provider rows, run [`supabase/sql/006_provider_self_write_rls.sql`](./supabase/sql/006_provider_self_write_rls.sql) to allow provider self-write policies.
 
 This creates the initial entities and Row Level Security policies for:
 - users/profiles, providers, patients
@@ -71,7 +72,7 @@ In Supabase dashboard:
 3. Add **Redirect URL**:
    - `http://localhost:3000/auth/callback`
 
-Without this step, magic-link sign-in callback will fail.
+This callback is used for email verification/OAuth redirects.
 
 ## 7. Implemented app slice (auth + onboarding + appointments)
 
@@ -80,7 +81,7 @@ Without this step, magic-link sign-in callback will fail.
 - `src/lib/supabase/middleware.ts` + `middleware.ts`: session refresh middleware
 - `src/app/auth/callback/route.ts`: auth callback handler
 - `src/app/auth/auth-code-error/page.tsx`: callback failure page
-- `src/app/auth/sign-in/page.tsx`: magic-link sign-in UI
+- `src/app/auth/sign-in/page.tsx`: email/password sign-in + sign-up UI
 - `src/app/onboarding/page.tsx`: role onboarding (provider/patient)
 - `src/app/app/*`: protected dashboard + appointment flows
 - Starter schema and RLS SQL in `supabase/sql`

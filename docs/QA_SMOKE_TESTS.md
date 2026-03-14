@@ -14,8 +14,8 @@ Run this checklist before each demo/release.
 
 ## 1. Auth and Onboarding
 
-1. Open `/auth/sign-in` and request magic link.
-2. Complete sign-in callback.
+1. Open `/auth/sign-in`.
+2. Sign up with email/password (or sign in if account already exists).
 3. If new account, complete onboarding as provider or patient.
 4. Confirm redirect to `/app`.
 

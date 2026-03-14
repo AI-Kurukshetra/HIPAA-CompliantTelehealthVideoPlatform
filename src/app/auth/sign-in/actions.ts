@@ -4,29 +4,81 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export async function signInWithMagicLink(formData: FormData) {
-  const email = String(formData.get("email") ?? "").trim();
+function getAppBaseUrl(host: string, protocol: string) {
+  const origin = `${protocol}://${host}`;
+  return process.env.NEXT_PUBLIC_APP_URL?.trim() || origin;
+}
+
+function validateCredentials(email: string, password: string) {
   if (!email) {
-    redirect("/auth/sign-in?error=Email%20is%20required");
+    return "Email is required";
+  }
+
+  if (!password) {
+    return "Password is required";
+  }
+
+  if (password.length < 8) {
+    return "Password must be at least 8 characters";
+  }
+
+  return null;
+}
+
+export async function signInWithPassword(formData: FormData) {
+  const email = String(formData.get("email") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+  const validationError = validateCredentials(email, password);
+
+  if (validationError) {
+    redirect(`/auth/sign-in?tab=signin&error=${encodeURIComponent(validationError)}`);
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    redirect(`/auth/sign-in?tab=signin&error=${encodeURIComponent(error.message)}`);
+  }
+
+  redirect("/app");
+}
+
+export async function signUpWithPassword(formData: FormData) {
+  const email = String(formData.get("email") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+  const validationError = validateCredentials(email, password);
+
+  if (validationError) {
+    redirect(`/auth/sign-in?tab=signup&error=${encodeURIComponent(validationError)}`);
   }
 
   const headerStore = await headers();
   const host = headerStore.get("x-forwarded-host") ?? headerStore.get("host") ?? "localhost:3000";
   const protocol = headerStore.get("x-forwarded-proto") ?? "http";
-  const origin = `${protocol}://${host}`;
-  const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() || origin;
+  const appBaseUrl = getAppBaseUrl(host, protocol).replace(/\/+$/, "");
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signInWithOtp({
+  const { data, error } = await supabase.auth.signUp({
     email,
+    password,
     options: {
-      emailRedirectTo: `${appBaseUrl.replace(/\/+$/, "")}/auth/callback?next=/app`,
+      emailRedirectTo: `${appBaseUrl}/auth/callback?next=/onboarding`,
     },
   });
 
   if (error) {
-    redirect(`/auth/sign-in?error=${encodeURIComponent(error.message)}`);
+    redirect(`/auth/sign-in?tab=signup&error=${encodeURIComponent(error.message)}`);
   }
 
-  redirect("/auth/sign-in?sent=1");
+  if (data.session) {
+    redirect("/onboarding");
+  }
+
+  redirect(
+    "/auth/sign-in?tab=signin&notice=Account%20created.%20If%20email%20verification%20is%20enabled,%20please%20verify%20then%20sign%20in.",
+  );
 }

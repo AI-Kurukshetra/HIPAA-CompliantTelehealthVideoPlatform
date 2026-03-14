@@ -12,7 +12,7 @@ type SubmitButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 export function SubmitButton({
   idleText,
   pendingText = "Processing...",
-  spinnerClassName = "border-white/60 border-t-white",
+  spinnerClassName = "border-white/40 border-t-white",
   className = "",
   disabled,
   ...props
@@ -25,7 +25,7 @@ export function SubmitButton({
       type="submit"
       disabled={isDisabled}
       aria-disabled={isDisabled}
-      className={`inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-70 ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-[var(--radius-sm)] px-5 py-2.5 text-sm font-semibold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
       {...props}
     >
       {pending ? (
