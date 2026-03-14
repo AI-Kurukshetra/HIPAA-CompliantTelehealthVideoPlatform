@@ -14,12 +14,13 @@ export async function signInWithMagicLink(formData: FormData) {
   const host = headerStore.get("x-forwarded-host") ?? headerStore.get("host") ?? "localhost:3000";
   const protocol = headerStore.get("x-forwarded-proto") ?? "http";
   const origin = `${protocol}://${host}`;
+  const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() || origin;
   const supabase = await createClient();
 
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${origin}/auth/callback?next=/app`,
+      emailRedirectTo: `${appBaseUrl.replace(/\/+$/, "")}/auth/callback?next=/app`,
     },
   });
 

@@ -40,6 +40,8 @@ In your Supabase dashboard:
 2. Run [`supabase/sql/001_schema.sql`](./supabase/sql/001_schema.sql).
 3. Run [`supabase/sql/002_rls.sql`](./supabase/sql/002_rls.sql).
 4. Run [`supabase/sql/003_payments_mvp.sql`](./supabase/sql/003_payments_mvp.sql) for payment write policies used by the app.
+5. Optional: run [`supabase/sql/004_demo_seed_data.sql`](./supabase/sql/004_demo_seed_data.sql) for demo UI walkthrough data.
+6. Optional (demo reset): run [`supabase/sql/005_reset_and_seed_demo_data.sql`](./supabase/sql/005_reset_and_seed_demo_data.sql) to wipe transactional app data and generate a fresh, richer demo dataset.
 
 This creates the initial entities and Row Level Security policies for:
 - users/profiles, providers, patients

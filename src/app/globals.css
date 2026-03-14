@@ -1,26 +1,76 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4f8fb;
+  --foreground: #123244;
+  --surface: #ffffff;
+  --line: #d4e0e8;
+  --brand: #0f6a8f;
+  --brand-strong: #0d5674;
+  --brand-soft: #e5f2f8;
+  --ok-soft: #e6f7ef;
+  --ok-ink: #1f6a46;
+  --warn-soft: #fff5dd;
+  --warn-ink: #825a12;
+  --danger-soft: #fceaea;
+  --danger-ink: #8a2f2f;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --font-sans: "Trebuchet MS", "Gill Sans", "Segoe UI", sans-serif;
+  --font-mono: Consolas, "Courier New", monospace;
+  --font-display: Cambria, Cochin, Georgia, serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Trebuchet MS", "Gill Sans", "Segoe UI", sans-serif;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 8% 6%, #d7edf8 0, rgba(215, 237, 248, 0) 36%),
+    radial-gradient(circle at 100% 0, #fcecc9 0, rgba(252, 236, 201, 0) 28%),
+    linear-gradient(180deg, #f7fbfe 0, #eff6fb 55%, #f4f8fb 100%);
+}
+
+.app-shell {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.9) 100%);
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 24px rgba(13, 58, 79, 0.08);
+  backdrop-filter: blur(6px);
+}
+
+.soft-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 22px rgba(15, 55, 72, 0.06);
+}
+
+.status-ok {
+  background: var(--ok-soft);
+  border: 1px solid #b8e3cb;
+  color: var(--ok-ink);
+}
+
+.status-warn {
+  background: var(--warn-soft);
+  border: 1px solid #efd79c;
+  color: var(--warn-ink);
+}
+
+.status-danger {
+  background: var(--danger-soft);
+  border: 1px solid #efb9b9;
+  color: var(--danger-ink);
+}
+
+.ink-muted {
+  color: #4e6574;
 }

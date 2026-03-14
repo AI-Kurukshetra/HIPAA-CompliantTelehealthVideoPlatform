@@ -8,8 +8,6 @@ type AppointmentRow = {
   ends_at: string;
   status: string;
   reason: string | null;
-  provider_id: string;
-  patient_id: string;
 };
 
 type AppointmentPageProps = {
@@ -25,7 +23,7 @@ export default async function AppointmentsPage({ searchParams }: AppointmentPage
 
   let query = supabase
     .from("appointments")
-    .select("id, starts_at, ends_at, status, reason, provider_id, patient_id")
+    .select("id, starts_at, ends_at, status, reason")
     .order("starts_at", { ascending: false })
     .limit(50);
 
@@ -50,37 +48,27 @@ export default async function AppointmentsPage({ searchParams }: AppointmentPage
 
   return (
     <section className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Appointments</h2>
-        <Link
-          href="/app/appointments/new"
-          className="rounded-md bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800"
-        >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-2xl font-semibold">Appointments</h2>
+          <p className="ink-muted text-sm">Review scheduled, active, and completed consultations.</p>
+        </div>
+        <Link href="/app/appointments/new" className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-strong">
           New appointment
         </Link>
       </div>
 
-      {params.created ? (
-        <p className="rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
-          Appointment created successfully.
-        </p>
-      ) : null}
-
-      {error ? (
-        <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-          Failed to load appointments: {error.message}
-        </p>
-      ) : null}
-
+      {params.created ? <p className="status-ok rounded-md px-3 py-2 text-sm">Appointment created successfully.</p> : null}
+      {error ? <p className="status-danger rounded-md px-3 py-2 text-sm">Failed to load appointments: {error.message}</p> : null}
       {!hasActorRecord ? (
-        <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+        <p className="status-warn rounded-md px-3 py-2 text-sm">
           Profile setup is incomplete for your role. Re-run onboarding to continue.
         </p>
       ) : null}
 
-      <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+      <div className="soft-card overflow-x-auto rounded-2xl">
         <table className="min-w-full text-left text-sm">
-          <thead className="bg-gray-50">
+          <thead className="bg-[#f2f8fc] text-[#355164]">
             <tr>
               <th className="px-4 py-3 font-medium">Start</th>
               <th className="px-4 py-3 font-medium">End</th>
@@ -92,19 +80,19 @@ export default async function AppointmentsPage({ searchParams }: AppointmentPage
           <tbody>
             {appointments.length === 0 ? (
               <tr>
-                <td className="px-4 py-4 text-gray-500" colSpan={5}>
+                <td className="px-4 py-4 text-[#5d7483]" colSpan={5}>
                   No appointments found.
                 </td>
               </tr>
             ) : (
               appointments.map((row) => (
-                <tr key={row.id} className="border-t border-gray-100">
+                <tr key={row.id} className="border-t border-[#e4edf3]">
                   <td className="px-4 py-3">{new Date(row.starts_at).toLocaleString()}</td>
                   <td className="px-4 py-3">{new Date(row.ends_at).toLocaleString()}</td>
                   <td className="px-4 py-3 capitalize">{row.status.replace("_", " ")}</td>
                   <td className="px-4 py-3">{row.reason ?? "-"}</td>
                   <td className="px-4 py-3">
-                    <Link href={`/app/appointments/${row.id}`} className="text-blue-700 hover:underline">
+                    <Link href={`/app/appointments/${row.id}`} className="font-medium text-[#0f6a8f] hover:underline">
                       Open
                     </Link>
                   </td>

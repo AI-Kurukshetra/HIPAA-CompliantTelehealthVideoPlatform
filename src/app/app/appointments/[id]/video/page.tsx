@@ -64,35 +64,25 @@ export default async function AppointmentVideoPage({ params }: AppointmentVideoP
 
   return (
     <section className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Video session</h2>
-        <Link
-          href={`/app/appointments/${appointment.id}`}
-          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm hover:bg-gray-50"
-        >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-2xl font-semibold">Video session</h2>
+        <Link href={`/app/appointments/${appointment.id}`} className="rounded-md border border-line bg-white px-3 py-1.5 text-sm font-semibold hover:bg-[#f4fbff]">
           Back to appointment
         </Link>
       </div>
 
-      <p className="text-sm text-gray-600">
-        If video fails to load, use the direct room link below in a new tab.
-      </p>
+      <p className="ink-muted text-sm">If video fails to load, use the direct room link below in a new tab.</p>
 
-      <div className="rounded-xl border border-gray-200 bg-white p-3">
+      <div className="soft-card rounded-2xl p-3">
         <iframe
           title="Telehealth video room"
           src={roomUrl}
           allow="camera; microphone; fullscreen; display-capture"
-          className="h-[70vh] w-full rounded-md border border-gray-200"
+          className="h-[70vh] w-full rounded-md border border-line"
         />
       </div>
 
-      <a
-        href={roomUrl}
-        target="_blank"
-        rel="noreferrer"
-        className="inline-block rounded-md border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50"
-      >
+      <a href={roomUrl} target="_blank" rel="noreferrer" className="inline-block rounded-md border border-line bg-white px-4 py-2 text-sm font-semibold hover:bg-[#f4fbff]">
         Open room in new tab
       </a>
     </section>

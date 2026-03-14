@@ -1,4 +1,5 @@
 import { createAppointment } from "@/app/app/actions";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { getUserActorIds, requireRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
@@ -28,26 +29,20 @@ export default async function NewAppointmentPage({ searchParams }: NewAppointmen
     (isPatient && !currentPatientId);
 
   return (
-    <section className="mx-auto w-full max-w-2xl rounded-xl border border-gray-200 bg-white p-6">
-      <h2 className="text-xl font-semibold">Schedule appointment</h2>
-      <p className="mt-2 text-sm text-gray-600">
-        Create a secure virtual consultation entry in the system.
-      </p>
+    <section className="soft-card mx-auto w-full max-w-3xl rounded-2xl p-6">
+      <h2 className="text-2xl font-semibold">Schedule appointment</h2>
+      <p className="ink-muted mt-2 text-sm">Create a secure virtual consultation entry in the system.</p>
 
-      {params.error ? (
-        <p className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-          {params.error}
-        </p>
-      ) : null}
+      {params.error ? <p className="status-danger mt-4 rounded-md px-3 py-2 text-sm">{params.error}</p> : null}
 
       {isProvider && !currentProviderId ? (
-        <p className="mt-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+        <p className="status-warn mt-4 rounded-md px-3 py-2 text-sm">
           Your provider record is missing. Re-run onboarding before scheduling appointments.
         </p>
       ) : null}
 
       {isPatient && !currentPatientId ? (
-        <p className="mt-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+        <p className="status-warn mt-4 rounded-md px-3 py-2 text-sm">
           Your patient record is missing. Re-run onboarding before scheduling appointments.
         </p>
       ) : null}
@@ -65,7 +60,7 @@ export default async function NewAppointmentPage({ searchParams }: NewAppointmen
               defaultValue={defaultProviderId}
               required
               disabled={isProvider}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="w-full rounded-md border border-line bg-white px-3 py-2.5 text-sm outline-none focus:border-[#6aa9c4] focus:ring-2 focus:ring-[#d7ecf7]"
             >
               {providers?.map((provider) => (
                 <option key={provider.id} value={provider.id}>
@@ -86,7 +81,7 @@ export default async function NewAppointmentPage({ searchParams }: NewAppointmen
               defaultValue={defaultPatientId}
               required
               disabled={isPatient}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="w-full rounded-md border border-line bg-white px-3 py-2.5 text-sm outline-none focus:border-[#6aa9c4] focus:ring-2 focus:ring-[#d7ecf7]"
             >
               {patients?.map((patient) => (
                 <option key={patient.id} value={patient.id}>
@@ -107,7 +102,7 @@ export default async function NewAppointmentPage({ searchParams }: NewAppointmen
               name="starts_at"
               type="datetime-local"
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="w-full rounded-md border border-line bg-white px-3 py-2.5 text-sm outline-none focus:border-[#6aa9c4] focus:ring-2 focus:ring-[#d7ecf7]"
             />
           </div>
           <div>
@@ -119,7 +114,7 @@ export default async function NewAppointmentPage({ searchParams }: NewAppointmen
               name="ends_at"
               type="datetime-local"
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="w-full rounded-md border border-line bg-white px-3 py-2.5 text-sm outline-none focus:border-[#6aa9c4] focus:ring-2 focus:ring-[#d7ecf7]"
             />
           </div>
         </div>
@@ -132,18 +127,17 @@ export default async function NewAppointmentPage({ searchParams }: NewAppointmen
             id="reason"
             name="reason"
             rows={3}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line bg-white px-3 py-2.5 text-sm outline-none focus:border-[#6aa9c4] focus:ring-2 focus:ring-[#d7ecf7]"
             placeholder="Follow-up consultation"
           />
         </div>
 
-        <button
-          type="submit"
+        <SubmitButton
+          idleText="Create appointment"
+          pendingText="Creating..."
           disabled={isSubmitDisabled}
-          className="rounded-md bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800"
-        >
-          Create appointment
-        </button>
+          className="bg-brand text-white hover:bg-brand-strong"
+        />
       </form>
     </section>
   );

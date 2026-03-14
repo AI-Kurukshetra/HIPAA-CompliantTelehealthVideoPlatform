@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function AppHomePage() {
   const { profile } = await requireProfile();
@@ -20,36 +20,30 @@ export default async function AppHomePage() {
   ];
 
   return (
-    <section className="space-y-6">
-      <div className="rounded-xl border border-gray-200 bg-white p-5">
-        <h2 className="text-xl font-semibold">Welcome, {profile.full_name ?? "User"}</h2>
-        <p className="mt-2 text-sm text-gray-600">
-          Your secure workspace is active. Use the links above to manage consultations.
+    <section className="space-y-5">
+      <div className="app-shell rounded-2xl p-6">
+        <h2 className="text-2xl font-semibold">Welcome, {profile.full_name ?? "User"}</h2>
+        <p className="ink-muted mt-2 text-sm">
+          Your secure care workspace is active. Use quick actions to schedule or review consultations.
         </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
         {cards.map((card) => (
-          <div key={card.label} className="rounded-xl border border-gray-200 bg-white p-5">
-            <p className="text-sm text-gray-600">{card.label}</p>
+          <div key={card.label} className="soft-card rounded-2xl p-5">
+            <p className="ink-muted text-sm">{card.label}</p>
             <p className="mt-2 text-3xl font-semibold">{card.value}</p>
           </div>
         ))}
       </div>
 
-      <div className="rounded-xl border border-gray-200 bg-white p-5">
+      <div className="soft-card rounded-2xl p-5">
         <h3 className="font-medium">Quick actions</h3>
-        <div className="mt-3 flex gap-3">
-          <Link
-            href="/app/appointments/new"
-            className="rounded-md bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800"
-          >
+        <div className="mt-3 flex flex-wrap gap-3">
+          <Link href="/app/appointments/new" className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-strong">
             Schedule appointment
           </Link>
-          <Link
-            href="/app/appointments"
-            className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50"
-          >
+          <Link href="/app/appointments" className="rounded-md border border-line bg-white px-4 py-2 text-sm font-semibold text-[#12445d] hover:bg-[#f4fbff]">
             View appointments
           </Link>
         </div>
@@ -57,4 +51,3 @@ export default async function AppHomePage() {
     </section>
   );
 }
-
